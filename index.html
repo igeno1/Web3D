@@ -46,6 +46,18 @@
             text-align: center;
             margin-top: 20px;
         }
+        .container {
+    display: flex;
+    justify-content: space-between; /* Espacio entre items */
+    gap: 10px; /* Espacio entre contenedores */
+}
+
+.item {
+    border: 1px solid #ccc; /* Borde alrededor del contenedor */
+    padding: 10px; /* Espacio interno */
+    flex: 1; /* Hace que todos los elementos tengan el mismo ancho */
+    box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+}
     </style>
 </head>
 <body>
@@ -75,7 +87,7 @@
             <a href="https://github.com/igeno1/Web3D" target="_blank">Visita el GitHub d'aquest projecte</a>
         </footer>
     </div>
-    <div class="exercise-container">
+    <div class="container">
         <a href="https://igeno1.github.io/Web3D/ex1/ex1.html" style="text-decoration: none; color: inherit;">
             <div class="exercise-card">
                 <img src="Fotonecesaria.png" alt="Ejercicio 1">
@@ -85,16 +97,17 @@
         </a>
     </div>
         
-        <div class="secondary-section">
-          <h3>Títol 2</h3>
-          <p>Descripció breu.</p>
-        </div>
-        
-        <div class="secondary-section">
-          <h3>Títol 3</h3>
-          <p>Descripció breu.</p>
-        </div>
-      </div>
+    <div class="container">
+        <img src="luna.jpeg" alt="Título 2">
+        <h3>Títol 2</h3>
+        <p>Descripció breu.</p>
+    </div>
+    <div class="container">
+        <img src="luna.jpeg" alt="Título 3">
+        <h3>Títol 3</h3>
+        <p>Descripció breu.</p>
+    </div>
+</div>
 </main>
 
 </body>
