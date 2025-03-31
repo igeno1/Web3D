@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script>
+      // Componente para redirigir a un enlace al hacer click
+      AFRAME.registerComponent("mylink", {
+        init: function () {
+          this.el.addEventListener("click", (e) => {
+            window.location = this.data.href;
+          });
+        },
+      });
+
+      // Componente para teletransportar el modelo hacia adelante cuando el usuario lo mire
+      AFRAME.registerComponent("teleport-toggle", {
+        init: function () {
+          this.camera = document.querySelector("a-camera");
+          this.isTeleporting = false;
+          this.checkVisibility();
+        },
+        checkVisibility: function () {
+          this.interval = setInterval(() => {
+            if (!this.isTeleporting && this.isVisible()) {
+              this.teleport();
+            }
+          }, 500);
+        },
+        isVisible: function () {
+          const cameraPosition = new THREE.Vector3();
+          this.camera.object3D.getWorldPosition(cameraPosition);
+
+          const objectPosition = new THREE.Vector3();
+          this.el.object3D.getWorldPosition(objectPosition);
+
+          return cameraPosition.distanceTo(objectPosition) < 5; // Ajusta la distancia si es necesario
+        },
+        teleport: function () {
+          this.isTeleporting = true;
+          this.el.setAttribute("visible", false);
+
+          // Calcula la nueva posición hacia adelante
+          const object3D = this.el.object3D;
+          const direction = new THREE.Vector3();
+          object3D.getWorldDirection(direction); // Obtén la dirección hacia adelante
+          direction.multiplyScalar(5); // Multiplica por la distancia deseada (5 en este caso)
+
+          const currentPosition = this.el.object3D.position;
+          const newPosition = {
+            x: currentPosition.x + direction.x,
+            y: currentPosition.y + direction.y,
+            z: currentPosition.z + direction.z,
+          };
+
+          setTimeout(() => {
+            this.el.setAttribute("position", newPosition);
+            this.el.setAttribute("visible", true);
+            this.isTeleporting = false;
+          }, 3000); // Tiempo antes de reaparecer
+        },
+      });
+    </script>
+  </head>
+  <body>
+    <a-scene cursor="rayOrigin: mouse">
+      <a-assets>
+        <img id="imgSortida" src="assets/entragroc.png" />
+        <img id="imgFantasma" src="assets/fantasma.png" />
+        <img id="imgCasa" src="assets/casadelsusto.jpg" />
+        <a-asset-item id="dracula" src="assets/bottom_-_silent_hill_4.glb"></a-asset-item>
+      </a-assets>
+
+      <a-entity camera look-controls wasd-controls="false">
+        <a-entity
+          cursor="fuse: true; fuseTimeout: 2000"
+          position="0 0 -1"
+          geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+          material="color: red; shader: flat"
+          animation="property: components.material.material.color;
+                     type: color;
+                     to: white;
+                     dur: 1000;
+                     dir: alternate;
+                     loop: true"
+        ></a-entity>
+      </a-entity>
+
+      <a-sky src="#imgCasa"></a-sky>
+
+      <!-- Modelo de Drácula que se teletransporta hacia adelante al ser visto -->
+      <a-entity
+        gltf-model="#dracula"
+        position="-5.877 -2.318 0.527"
+        rotation="0 114.186 0"
+        scale="0.4 0.4 0.1"
+        teleport-toggle
+      ></a-entity>
+
+      <a-plane
+        position="20 1 -4"
+        src="#imgSortida"
+        rotation="0 -90 0"
+        transparent="true"
+      ></a-plane>
+    </a-scene>
+  </body>
+</html>
